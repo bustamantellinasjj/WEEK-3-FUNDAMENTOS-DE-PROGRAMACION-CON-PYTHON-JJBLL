@@ -104,7 +104,7 @@ Finalizado — Proyecto funcional y estructurado bajo buenas prácticas básicas
 ## Autor
 
 Desarrollado por **Juan José Bustamante**
-Proyecto académico — Fundamentos de Programación con Python
+Modulo 1 — Fundamentos de Programación con Python
 
 ---
 
