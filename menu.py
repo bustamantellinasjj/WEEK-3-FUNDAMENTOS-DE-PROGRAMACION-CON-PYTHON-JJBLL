@@ -11,24 +11,27 @@ from archivos import * # IMPORTA LAS FUNCIONES DE archivos.py PARA GUARDAR Y CAR
 # =================================================================================================================
 # FUNCIONES DE VALIDACIÓN
 # =================================================================================================================
-
 def pedir_texto(mensaje): 
     """SOLICITA TEXTO NO VACÍO"""
 
     repetir = True # VARIABLE DE CONTROL PARA EL BUCLE DE REPETICIÓN.
     while repetir: # BUCLE QUE SE REPITE HASTA QUE EL USUARIO INGRESE UN TEXTO VÁLIDO.
 
-        # SOLICITA TEXTO AL USUARIO.
-        texto = input(mensaje).strip() # .strip() ELIMINA ESPACIOS EN BLANCO AL PRINCIPIO | FINAL.
-
-
-        if texto == "": # SI EL TEXTO ESTA VACÍO MUETSRA UN MENSAJE.
+        try:
+             # SOLICITA TEXTO AL USUARIO.
+            texto = input(mensaje).strip() # .strip() ELIMINA ESPACIOS EN BLANCO AL PRINCIPIO | FINAL.
+        except (KeyboardInterrupt, EOFError):  # CTRL+C o CTRL+Z
+            print("-" * 55)
+            print("\nATAJO NO PERMITIDO! INTENTE DE NUEVO.") # MENSAJE PARA EL USUARIO.
+            texto = ""
+        
+        if texto == "": # SI EL TEXTO ESTA VACÍO MUESTRA UN MENSAJE.
+            print("-" * 55)
             print("ERROR! NO PUEDE ESTAR VACÍO") # MENSAJE PARA EL USUARIO.
         else:
             repetir = False # CAMBIO LA VARIABLE DE CONTROL A False PARA SALIR DEL BUCLE.
 
     return texto # RETORNO EL TEXTO INGRESADO POR EL USUARIO A LA FUNCIÓN QUE LO LLAMÓ.
-
 
 def pedir_float(mensaje):
     """SOLICITA NÚMERO DECIMAL"""
@@ -37,153 +40,291 @@ def pedir_float(mensaje):
     while repetir: # BUCLE QUE SE REPITE HASTA QUE EL USUARIO INGRESE UN NÚMERO DECIMAL VÁLIDO.
 
         try:
-            valor = float(input(mensaje)) # SOLICITA UN NÚMERO DECIMAL AL USUARIO.
+            valor_texto = input(mensaje).strip() # SOLICITA UN NÚMERO DECIMAL AL USUARIO Y ELIMINA ESPACIOS EN BLANCO AL PRINCIPIO | FINAL.
+        except (KeyboardInterrupt, EOFError):  # CTRL+C o CTRL+Z
+            print("-" * 55)
+            print("\nATAJO NO PERMITIDO! INTENTE DE NUEVO.") # MENSAJE PARA EL USUARIO.
+            valor_texto = ""
+        
+        if valor_texto == "":
+            print("-" * 55)
+            print("NÚMERO INVÁLIDO") # MENSAJE PARA EL USUARIO.
+            continue
+
+        try:
+            valor = float(valor_texto)
             if valor < 0:  # SI EL NÚMERO ES NEGATIVO MUESTRA UN MENSAJE DE ERROR.
+                print("-" * 55)
                 print("EL NÚMERO NO PUEDE SER NEGATIVO") # MENSAJE PARA EL USUARIO.
             else:
                 repetir = False # CAMBIO LA VARIABLE DE CONTROL A False PARA SALIR DEL BUCLE.
-        except ValueError: # SI EL USUARIO INGRESA UN VALOR QUE NO ES UN NÚMERO DECIMAL MUESTRA UN MENSAJE DE ERROR.
+        except ValueError: 
+            print("-" * 55)
             print("NÚMERO INVÁLIDO") # MENSAJE PARA EL USUARIO.
 
-    return valor # RETORNO EL NÚMERO DECIMAL INGRESADO POR EL USUARIO A LA FUNCIÓN QUE LO LLAMÓ.
-
+    return valor
 
 def pedir_int(mensaje):
     """SOLICITA NÚMERO ENTERO"""
 
     repetir = True # VARIABLE DE CONTROL PARA EL BUCLE DE REPETICIÓN.
-    while repetir:  # BUCLE QUE SE REPITE HASTA QUE EL USUARIO INGRESE UN NÚMERO ENTEROVÁLIDO.
+    while repetir: # BUCLE QUE SE REPITE HASTA QUE EL USUARIO INGRESE UN NÚMERO ENTEROVÁLIDO.
 
         try:
-            valor = int(input(mensaje)) # SOLICITA UN NÚMERO ENTERO AL USUARIO.
-            if valor < 0: # SI EL NÚMERO ES NEGATIVO MUESTRA UN MENSAJE DE ERROR.
+            valor_texto = input(mensaje).strip() # SOLICITA UN NÚMERO ENTERO AL USUARIO.
+        except (KeyboardInterrupt, EOFError):  # ENCAPSULA ERROES DE INTERRUPCION: CTRL+C | CTRL+Z
+            print("-" * 55)
+            print("\nATAJO NO PERMITIDO! INTENTE DE NUEVO.") # MENSAJE PARA EL USUARIO.
+            valor_texto = ""
+        
+        if valor_texto == "":
+            print("-" * 55)
+            print("NÚMERO INVÁLIDO") # MENSAJE PARA EL USUARIO.
+            continue
+
+        try:
+            valor = int(valor_texto) # CONVIERTO EL TEXTO INGRESADO POR EL USUARIO A UN NÚMERO ENTERO.
+            if valor < 0:  # SI EL NÚMERO ES NEGATIVO MUESTRA UN MENSAJE DE ERROR.
+                print("-" * 55)
                 print("EL NÚMERO NO PUEDE SER NEGATIVO!") # MENSAJE PARA EL USUARIO.
             else:
                 repetir = False # CAMBIO LA VARIABLE DE CONTROL A False PARA SALIR DEL BUCLE.
         except ValueError: # SI EL USUARIO INGRESA UN VALOR QUE NO ES UN NÚMERO ENTERO MUESTRA UN MENSAJE DE ERROR.
+            print("-" * 55)
             print("NÚMERO INVÁLIDO") # MENSAJE PARA EL USUARIO.
 
     return valor # RETORNO EL NÚMERO ENTERO INGRESADO POR EL USUARIO A LA FUNCIÓN QUE LO LLAMÓ.
 
 # =================================================================================================================
-# FUNCIONES DE OPCIONES
+# FUNCIONES DE OPCIONES 1-8 | CADA FUNCIÓN CORRESPONDE A UNA OPCIÓN DEL MENÚ Y MANEJA LA INTERACCIÓN CON EL USUARIO PARA ESA OPCIÓN.
 # =================================================================================================================
+# OPCION 1 (OK)
 def opcion_agregar(inventario):
     """AGREGA PRODUCTOS CON REPETICIÓN"""
 
     repetir = True
     while repetir:
 
-        nombre = pedir_texto("Nombre: ")
-        precio = pedir_float("Precio: ")
-        cantidad = pedir_int("Cantidad: ")
+        print("-" * 55)
+        print("HAS SELECIONADO | AGREGAR PRODUCTO:") # MENSAJE PARA EL USUARIO.
+        print("-" * 55)
 
-        agregar_producto(inventario, nombre, precio, cantidad)
-        print("✅ AGREGADO")
+        nombre = pedir_texto("Nombre: ") # SOLICITA EL NOMBRE DEL PRODUCTO AL USUARIO.
+        precio = pedir_float("Precio: ") # SOLICITA EL PRECIO DEL PRODUCTO AL USUARIO.
+        cantidad = pedir_int("Cantidad: ") # SOLICITA LA CANTIDAD DEL PRODUCTO AL USUARIO.
 
-        respuesta = input("¿AGREGAR OTRO? (S/N): ").lower()
+        agregar_producto(inventario, nombre, precio, cantidad) 
+        print("-" * 55)
+        print("PRODUCTO AGREGADO EXITOSAMENTE!")
 
-        if respuesta == "n":
-            repetir = False
+        # CONTROL DE REPETICIÓN PARA AGREGAR OTRO PRODUCTO O SALIR DE LA OPCIÓN.
+        respuesta = ""
+        while respuesta == "":
+            print("-" * 55)
+            respuesta = input("¿AGREGAR OTRO? (S/N): ").strip().lower()
 
+            if respuesta == "s":
+                repetir = True
 
+            elif respuesta == "n":
+                print("-" * 55)
+                repetir = False
+
+            else:
+                print("-" * 55)
+                print("LETRA INVÁLIDA! ESCRIBA S/N")
+                respuesta = ""
+
+# OPCION 2 (OK)
 def opcion_mostrar(inventario): # PASO inventario COMO PARÁMETRO PARA EVITAR VARIABLES GLOBALES.
     """MUESTRA EL INVENTARIO"""
 
     if not inventario: # SI EL INVENTARIO ESTA VACIO MUESTRA UN MENSAJE.
-        print("INVENTARIO VACÍO!") # MENSAJE PARA EL USUARIO.
+        print("-" * 50)
+        print("ACTUALMENTE EL INVENTARIO ESTA VACÍO!") # MENSAJE PARA EL USUARIO.
+        print("-" * 50)
+
     else:
         mostrar_inventario(inventario) # LLAMA LA FUNCIOM mostrar_inventario()
 
 
-def opcion_buscar(inventario):
-    """BUSCA HASTA ENCONTRAR"""
+# OPCION 3 (OK)
+def opcion_buscar(inventario): 
+    """BUSCA PRODUCTOS CON REPETICIÓN"""
 
-    encontrado = False # VARIABLE DE CONTROL PARA EL BUCLE DE BUSQUEDA.
-    while not encontrado: # BUCLE.
+    repetir = True # VARIABLE DE CONTROL PARA EL BUCLE DE BUSQUEDA.
+    while repetir: #BUCLE.
 
-        nombre = pedir_texto("Buscar: ")
+        print("-" * 55)
+        print("HAS SELECCIONADO | BUSCAR PRODUCTO:") # MENSAJE PARA EL USUARIO.
+        print("-" * 55)
+
+        nombre = pedir_texto("NOMBRE DEL PRODUCTO: ") # SOLICITA EL NOMBRE DEL PRODUCTO AL USUARIO.
         producto = buscar_producto(inventario, nombre)
-
+        
+        print("-" * 55)
         if producto:
-            print("✅ ENCONTRADO:", producto)
-            encontrado = True
+
+            precio = float(producto['precio']) # CONVIERTO EL PRECIO A FLOAT PARA FORMATEARLO CON 2 DECIMALES EN LA IMPRESIÓN.
+            print(f"Nombre: {producto['nombre']} | Precio: {precio:.2f} | Cantidad: {producto['cantidad']}")      
         else:
             print("EL PRODUCTO NO EXISTE DENTRO DEL INVENTARIO!")
 
+        # CONTROL DE REPETICIÓN PARA BUSCAR OTRO PRODUCTO O SALIR DE LA OPCIÓN.
+        respuesta = ""
+        while respuesta == "":
+            print("-" * 55)
+            respuesta = input("¿BUSCAR OTRO PRODUCTO? (S/N): ").strip().lower() 
 
+            if respuesta == "s":
+                repetir = True
+            
+            elif respuesta == "n":
+                repetir = False
+    
+            else:
+                print("LETRA INVÁLIDA! ESCRIBA S/N")
+                respuesta = ""
+            
+# OPCION 4 (OK)
 def opcion_actualizar(inventario):
-    """ACTUALIZA CON REPETICIÓN"""
+    """ACTUALIZA PRECIO Y/O CANTIDAD DE UN PRODUCTO"""
 
-    repetir = True
-    while repetir:
+    repetir = True  # VARIABLE DE CONTROL PARA EL BUCLE DE ACTUALIZACIÓN.
+    while repetir:  # BUCLE QUE SE REPITE HASTA QUE EL USUARIO DECIDA NO ACTUALIZAR MÁS PRODUCTOS.
 
-        nombre = pedir_texto("Producto: ")
+        print("-" * 55)
+        print("HAS SELECCIONADO | ACTUALIZAR PRODUCTO:")  # MENSAJE PARA EL USUARIO.
+        print("-" * 55)
 
-        if not buscar_producto(inventario, nombre):
-            print("❌ NO EXISTE")
+        nombre = pedir_texto("NOMBRE DEL PRODUCTO A ACTUALIZAR: ")  # SOLICITA EL NOMBRE DEL PRODUCTO.
+        producto = buscar_producto(inventario, nombre)
+        print("-" * 55)
+
+        if not producto:
+            print("EL PRODUCTO NO EXISTE EN EL INVENTARIO!")  # MENSAJE PARA EL USUARIO.
         else:
-            precio = input("Nuevo precio: ")
-            cantidad = input("Nueva cantidad: ")
+            print(f"Producto encontrado: {producto['nombre']} | Precio: {producto['precio']:.2f} | Cantidad: {producto['cantidad']}")
+            print("-" * 55)
 
-            nuevo_precio = float(precio) if precio else None
-            nueva_cantidad = int(cantidad) if cantidad else None
+            nuevo_precio = input("NUEVO PRECIO (ENTER para mantener): ").strip()
+            nueva_cantidad = input("NUEVA CANTIDAD (ENTER para mantener): ").strip()
+
+            # VALIDAR PRECIO
+            if nuevo_precio != "":
+                if not nuevo_precio.replace(".", "", 1).isdigit():
+                    print("EL PRECIO DEBE SER UN NÚMERO!")
+                    continue
+                nuevo_precio = float(nuevo_precio)
+                if nuevo_precio < 0:
+                    print("EL PRECIO NO PUEDE SER MENOR QUE 0!")
+                    continue
+            else:
+                nuevo_precio = None
+
+            # VALIDAR CANTIDAD
+            if nueva_cantidad != "":
+                if not nueva_cantidad.isdigit():
+                    print("LA CANTIDAD DEBE SER UN NÚMERO ENTERO!") # MENSAJE PARA EL USUARIO.
+                    continue
+                nueva_cantidad = int(nueva_cantidad)
+                if nueva_cantidad < 0:
+                    print("LA CANTIDAD NO PUEDE SER MENOR QUE 0!") # MENSAJE PARA EL USUARIO.
+                    continue
+            else:
+                nueva_cantidad = None
 
             actualizar_producto(inventario, nombre, nuevo_precio, nueva_cantidad)
-            print("✅ ACTUALIZADO")
+            print("-" * 55)
+            print("PRODUCTO ACTUALIZADO EXITOSAMENTE!")  # MENSAJE PARA EL USUARIO.
 
-            respuesta = input("¿ACTUALIZAR OTRO? (S/N): ").lower()
+        # CONTROL DE REPETICIÓN PARA ACTUALIZAR OTRO PRODUCTO O SALIR DE LA OPCIÓN.
+        respuesta = ""
+        while respuesta == "":
+            print("-" * 55)
+            respuesta = input("¿ACTUALIZAR OTRO PRODUCTO? (S/N): ").strip().lower()
 
-            if respuesta == "n":
+            if respuesta == "s":
+                repetir = True
+            elif respuesta == "n":
+                print("-" * 55)
+                repetir = False
+            else:
+                print("LETRA INVÁLIDA! ESCRIBA S/N")
+                respuesta = ""
+
+
+# OPCION 5 (OK)
+def opcion_eliminar(inventario):
+    """ELIMINA PRODUCTOS CON REPETICIÓN"""
+
+    repetir = True # VARIABLE DE CONTROL PARA EL BUCLE DE ELIMINACIÓN.
+    while repetir: # BUCLE QUE SE REPITE HASTA QUE EL USUARIO DECIDA NO ELIMINAR MÁS PRODUCTOS.
+
+        print("-" * 55)
+        print("HAS SELECCIONADO | ELIMINAR PRODUCTO:") # MENSAJE PARA EL USUARIO.
+        print("-" * 55)
+
+        nombre = pedir_texto("NOMBRE DEL PRODUCTO A ELIMINAR: ") # SOLICITA EL NOMBRE DEL PRODUCTO A ELIMINAR AL USUARIO.
+        producto = buscar_producto(inventario, nombre) # BUSCA EL PRODUCTO EN EL INVENTARIO PARA VER SI EXISTE ANTES DE INTENTAR ELIMINARLO.
+
+        print("-" * 55)
+        if not producto:
+            print("EL PRODUCTO NO EXISTE EN EL INVENTARIO!") # MENSAJE PARA EL USUARIO.
+        else:
+            eliminar_producto(inventario, nombre) # LLAMA LA FUNCIÓN eliminar_producto() PARA ELIMINAR EL PRODUCTO DEL INVENTARIO.
+            print("PRODUCTO ELIMINADO EXITOSAMENTE!") # MENSAJE PARA EL USUARIO.
+        
+        # CONTROL DE REPETICIÓN PARA ELIMINAR OTRO PRODUCTO O SALIR DE LA OPCIÓN.
+        respuesta = ""
+        while respuesta == "":
+            print("-" * 55)
+            respuesta = input("¿ELIMINAR OTRO PRODUCTO? (S/N): ").strip().lower()
+
+            if respuesta == "s":
+                repetir = True
+
+            elif respuesta == "n":
+                print("-" * 55)
                 repetir = False
 
-
-def opcion_eliminar(inventario):
-    """ELIMINA HASTA ENCONTRAR"""
-
-    eliminado = False
-    while not eliminado:
-
-        nombre = pedir_texto("Eliminar: ")
-
-        if eliminar_producto(inventario, nombre):
-            print("✅ ELIMINADO")
-            eliminado = True
-        else:
-            print("❌ NO EXISTE")
+            else:
+                print("LETRA INVÁLIDA! ESCRIBA S/N") # MENSAJE PARA EL USUARIO.
+                respuesta = ""
 
 
+# OPCION 6: (OK)
 def opcion_estadisticas(inventario):
     """MUESTRA ESTADÍSTICAS"""
+    calcular_estadisticas(inventario)
 
-    stats = calcular_estadisticas(inventario)
+   
+# =================================================================================================================
+# CSV: GUARDAR Y CARGAR INVENTARIO | OPCIONES 7 Y 8 DEL MENÚ.
+# =================================================================================================================
 
-    if not stats:
-        print("⚠️ VACÍO")
-    else:
-        print("\n--- ESTADÍSTICAS ---")
-        print(f"UNIDADES: {stats['unidades_totales']} ({', '.join(stats['productos'])})")
-        print(f"VALOR: ${stats['valor_total']:.2f}")
-        print(f"MÁS CARO: {stats['producto_mas_caro']['nombre']}")
-        print(f"MAYOR STOCK: {stats['producto_mayor_stock']['nombre']}")
-
-
+# OPCION 7 | GUARDAR INVENTARIO EN UN ARCHIVO CSV. (OK)
 def opcion_guardar(inventario):
-    """GUARDA ARCHIVO"""
-    ruta = pedir_texto("Ruta: ")
+    """GUARDA ARCHIVO CSV"""
+    print("-" * 55)
+    ruta = pedir_texto("NOMBRA LA RUTA DEL CSV: ")
     guardar_csv(inventario, ruta)
 
-
-def opcion_cargar(inventario):
+# OPCION 8 | CARGAR INVENTARIO DESDE UN ARCHIVO CSV. (OK)
+def opcion_cargar(inventario): 
     """CARGA ARCHIVO"""
+    print("-" * 55)
+    ruta = pedir_texto("NOMBRE DE LA RUTA DEL ARCHIVO CSV A CARGAR: ") # SOLICITA LA RUTA DEL ARCHIVO CSV AL USUARIO.
+    print("-" * 55)
 
-    ruta = pedir_texto("Ruta: ")
     datos = cargar_csv(ruta)
 
     if datos:
         inventario.clear()
         inventario.extend(datos)
         print("INVENTARIO ACTUALIZADO!")
+        print("-" * 55)
+        
 
 # =================================================================================================================
 # FUNCIÓN PRINCIPAL: ejecutar_menu() | CONTROLA EL CICLO PRINCIPAL DEL PROGRAMA.
@@ -248,5 +389,3 @@ def ejecutar_menu():
 
         else:
             print("\nOPCIÓN INVÁLIDA! SELECCIONE UN NÚMERO DEL 1 AL 9.") # MENSAJE DE ERROR PARA OPCIONES NO VÁLIDAS.
-
-

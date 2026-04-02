@@ -6,6 +6,7 @@
 # =====================================================================================================
 # FUNCIÓN: agregar_producto() | AGREGA UN NUEVO PRODUCTO A LA LISTA inventario.
 # =====================================================================================================
+# OPCION 1 (OK)
 def agregar_producto(inventario, nombre, precio, cantidad):
     """AGREGA UN PRODUCTO AL INVENTARIO"""
     inventario.append({
@@ -15,19 +16,24 @@ def agregar_producto(inventario, nombre, precio, cantidad):
     })
 
 
+# OPCION 2 (OK)
 def mostrar_inventario(inventario):
     """MUESTRA LOS PRODUCTOS EN FORMATO DE TABLA"""
-    print("-" * 35)
-    print("\n        STOCK DE INVENTARIO       ")
-    print("-" * 35)
-    print(f"\n{'Producto':<15} {'Precio':<10} {'Cantidad':<10}")
-    print("-" * 35)
+    print("-" * 50)
+    print("           STOCK DE INVENTARIO       ")
+    print("-" * 50)
+
+    # ENCABEZADOS ALINEADOS
+    print(f"{'Producto':<15} {'Precio':<15} {'Cantidad':<10}") # :<15 ALINEA A LA IZQUIERDA EN UN ESPACIO DE 15 CARACTERES.
+    print("-" * 50)
 
     # RECORRE CADA PRODUCTO
     for p in inventario:
-        print(f"{p['nombre']:<15} ${p['precio']:.2f}      {p['cantidad']}")
+        print(f"{p['nombre']:<15} ${p['precio']:<14.2f} {p['cantidad']:<10}")
+        print("-" * 50)
 
 
+# OPCION 3 (OK)
 def buscar_producto(inventario, nombre):
     """BUSCA UN PRODUCTO POR SU NOMBRE"""
     for p in inventario:
@@ -36,6 +42,7 @@ def buscar_producto(inventario, nombre):
     return None
 
 
+# OPCION 4
 def actualizar_producto(inventario, nombre, nuevo_precio=None, nueva_cantidad=None):
     """ACTUALIZA PRECIO Y/O CANTIDAD DE UN PRODUCTO"""
     producto = buscar_producto(inventario, nombre)
@@ -52,7 +59,7 @@ def actualizar_producto(inventario, nombre, nuevo_precio=None, nueva_cantidad=No
 
     return False
 
-
+# OPCION 5
 def eliminar_producto(inventario, nombre):
     """ELIMINA UN PRODUCTO DEL INVENTARIO"""
     producto = buscar_producto(inventario, nombre)
@@ -64,25 +71,40 @@ def eliminar_producto(inventario, nombre):
     return False
 
 
+# OPCION 6 (OK)
 def calcular_estadisticas(inventario):
     """CALCULA ESTADÍSTICAS DEL INVENTARIO"""
+
     if not inventario:
-        return {}
+        print("-" * 50)
+        print("NO HAY PRODUCTOS EN EL INVENTARIO     ")
+        print("-" * 50)
+        return
 
-    unidades_totales = sum(p["cantidad"] for p in inventario) # SUMA TOTAL DE UNIDADES EXISTENTES EN EL INVENTARIO
+    unidades_totales = sum(p["cantidad"] for p in inventario)
+    valor_total = sum(p["precio"] * p["cantidad"] for p in inventario)
+    producto_mas_caro = max(inventario, key=lambda p: p["precio"])
+    producto_mayor_stock = max(inventario, key=lambda p: p["cantidad"])
 
-    valor_total = sum(p["precio"] * p["cantidad"] for p in inventario) # SUMA TOTAL DE VALOR DE TODOS LOS PRODUCTOSDEL INVENTARIO.
+    print("-" * 50)
+    print("        ESTADÍSTICAS DEL INVENTARIO       ")
+    print("-" * 50)
 
-    producto_mas_caro = max(inventario, key=lambda p: p["precio"]) # PRODUCTO MÁS CARO.
+    print(f"{'Unidades totales:':<25} {unidades_totales}")
+    print(f"{'Valor total ($):':<25} ${valor_total:.2f}")
 
-    producto_mayor_stock = max(inventario, key=lambda p: p["cantidad"]) # PRODUCTO CON MAYOR STOCK.
+    print("-" * 50)
+    print(f"{'Producto más caro:':<25} {producto_mas_caro['nombre']}")
+    print(f"{'Precio:':<25} ${producto_mas_caro['precio']:.2f}")
+    print("-" * 50)
 
-    nombres = [p["nombre"] for p in inventario] # LISTA DE NOMBRES DE PRODUCTOS.
+    print(f"{'Mayor stock:':<25} {producto_mayor_stock['nombre']}")
+    print(f"{'Cantidad:':<25} {producto_mayor_stock['cantidad']}")
+    print("-" * 50)
 
-    return {
-        "unidades_totales": unidades_totales,
-        "valor_total": valor_total,
-        "producto_mas_caro": producto_mas_caro,
-        "producto_mayor_stock": producto_mayor_stock,
-        "productos": nombres
-    }
+    print("LISTA DE PRODUCTOS:")
+    print("-" * 50)
+
+    for p in inventario:
+        print(f"{p['nombre']:<25}")
+    print("-" * 50)
